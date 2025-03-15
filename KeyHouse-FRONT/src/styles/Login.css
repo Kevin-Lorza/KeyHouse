@@ -1,0 +1,91 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+h2{
+  text-align: center;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-box {
+  display: flex;
+  width: 800px; /* Aumentar el ancho */
+  height: 500px; /* Aumentar la altura */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 2);
+}
+
+.image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid #ddd;
+  overflow: hidden; /* Oculta cualquier contenido que se salga */
+  height: 100%; /* Asegura que el contenedor tenga una altura definida */
+}
+
+.image-section img {
+  width: 100%; /* Asegura que la imagen ocupe el 100% del ancho del contenedor */
+  height: auto; /* Mantiene la proporción de la imagen */
+  max-height: 100%; /* Limita la altura máxima para que no se salga del contenedor */
+  object-fit: cover;
+  border-radius: 5px; /* Cubre el área del contenedor sin distorsionar la imagen */
+}
+.form-section {
+  flex: 1;
+  padding: 40px; /* Aumentar el padding para más espacio */
+}
+
+.form-section h2 {
+  margin-bottom: 20px;
+}
+
+.form-section input {
+  width: 100%;
+  padding: 12px; /* Aumentar el padding de los inputs */
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.login-button {
+  width: 108%;
+  padding: 12px; /* Aumentar el padding del botón */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px; /* Aumentar el tamaño de la fuente */
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px; /* Aumentar el margen superior */
+}
+
+.create-account, .recover-account {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.create-account:hover, .recover-account:hover {
+  text-decoration: underline;
+}

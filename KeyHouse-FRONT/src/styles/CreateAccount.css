@@ -1,0 +1,97 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+h2 {
+  text-align: center;
+}
+
+.Create-Container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.Create-Box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%; /* Ajusta según el diseño */
+  max-width: 600px; /* Evita que se haga demasiado ancho */
+  min-height: fit-content; /* Ajusta la altura automáticamente */
+}
+
+.Create-Image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 1px solid #ddd; /* Cambia a border-left si la imagen está a la derecha */
+  overflow: hidden; /* Oculta cualquier contenido que se salga */
+  height: 100%; /* Asegura que el contenedor tenga una altura definida */
+}
+
+.Create-Image img {
+  width: 100%; /* Asegura que la imagen ocupe el 100% del ancho del contenedor */
+  height: auto; /* Mantiene la proporción de la imagen */
+  max-height: 100%; /* Limita la altura máxima para que no se salga del contenedor */
+  object-fit: cover;
+  border-radius: 5px; /* Cubre el área del contenedor sin distorsionar la imagen */
+}
+
+.Form-Section {
+  flex: 1;
+  padding: 40px; /* Aumentar el padding para más espacio */
+}
+
+.Form-Section h2 {
+  margin-bottom: 20px;
+}
+
+.Form-Section input {
+  width: 100%;
+  padding: 12px; /* Aumentar el padding de los inputs */
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.Create-Account-Button {
+  width: 108%;
+  padding: 12px; /* Aumentar el padding del botón */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px; /* Aumentar el tamaño de la fuente */
+  cursor: pointer;
+}
+
+.Create-Account-Button:hover {
+  background-color: #0056b3;
+}
+
+.Button-Group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px; /* Aumentar el margen superior */
+}
+
+.Login-Account, .Recover-Account {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.Login-Account:hover, .Recover-Account:hover {
+  text-decoration: underline;
+}
