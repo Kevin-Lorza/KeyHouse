@@ -166,11 +166,55 @@ function actualizarContrasena(tabla, email, contraseña) {
         });
     });
 }
+// Obtener todas las casas
+function obtenerCasas() {
+    return new Promise((resolve, reject) => {
+        conexion.query(`SELECT * FROM casas`, (error, result) => {
+            return error ? reject(error) : resolve(result.rows);
+        });
+    });
+}
+
+// Obtener casas de un usuario específico
+function obtenerCasasPorUsuario(id_usuario) {
+    return new Promise((resolve, reject) => {
+        conexion.query(`SELECT * FROM casas WHERE id_usuario = $1`, [id_usuario], (error, result) => {
+            return error ? reject(error) : resolve(result.rows);
+        });
+    });
+}
+
+// Insertar una nueva casa
+function insertarCasa(data) {
+    return new Promise((resolve, reject) => {
+        const query = `INSERT INTO casas (titulo, descripcion, direccion, precio, imagenes, id_usuario) 
+                       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`;
+        const valores = [data.titulo, data.descripcion, data.direccion, data.precio, data.imagenes, data.id_usuario];
+
+        conexion.query(query, valores, (error, result) => {
+            return error ? reject(error) : resolve(result.rows[0]);
+        });
+    });
+}
+
+// Eliminar una casa por ID
+function eliminarCasa(id) {
+    return new Promise((resolve, reject) => {
+        conexion.query(`DELETE FROM casas WHERE id = $1 RETURNING *;`, [id], (error, result) => {
+            return error ? reject(error) : resolve(result.rows[0]);
+        });
+    });
+}
 
 module.exports = {
     todos,
     uno,
     agregar,
     eliminar,
-    actualizarContrasena, // Exportar la nueva función
+    actualizarContrasena,
+    obtenerCasas,
+    obtenerCasasPorUsuario,
+    insertarCasa,
+    eliminarCasa
 };
+

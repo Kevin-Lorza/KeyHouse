@@ -47,7 +47,7 @@ const CreateAccount = () => {
 
         const createData = await createResponse.json();
         console.log('Cuenta creada:', createData);
-        alert('Cuenta creada exitosamente. No olvides tu respuesta de seguridad.');
+        alert('Cuenta creada exitosamente. Inicia sesión para continuar.');
       }
     } catch (error) {
       console.error('Error:', error);

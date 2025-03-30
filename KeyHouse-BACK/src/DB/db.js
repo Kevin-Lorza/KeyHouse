@@ -14,15 +14,6 @@ let conexion;
 function conpg() {
     conexion = new db.Client(pgconfig);
 
-    conexion.connect((err)=> {
-        if(err) {
-            console.log('[db err]', err);
-            setTimeout(conpg, 200); 
-        }else {
-            console.log('Conectado a la base de datos libros');
-        }
-    })
-
     conexion.on('error', err => {
         console.error('[db err]', err);
         if(err.code === 'PROTOCOL_CONNECTION_LOST') {

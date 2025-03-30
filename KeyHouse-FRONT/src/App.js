@@ -5,11 +5,13 @@ import CreateAccount from './components/CreateAccount';
 import Login from './components/Login';
 import ForgotPassword from './components/ForgotPassword';
 import Home from './components/Home';
+import RegistrarCasa from "./components/RegistrarCasa"; // Importar la nueva página
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/RegistrarCasa" element={<RegistrarCasa />} /> 
         <Route path="/" element={<Login />} />
         <Route path="/create-account" element={<CreateAccount />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

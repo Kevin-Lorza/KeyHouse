@@ -6,6 +6,7 @@ import logo from '../images/Logo.png'; // Logo
 const Home = () => {
     const [search, setSearch] = useState(''); // Estado para la barra de búsqueda
 
+
     // Cargar los datos desde el backend
    
     return (
@@ -19,6 +20,7 @@ const Home = () => {
                     <Link to="/">Cerrar Sesión</Link>
                     <div className="dropdown"></div>
                     <Link to="/favoritos">Favoritos</Link>
+                    <Link to="/RegistrarCasa">Publicar Vivienda</Link>
                     <input
                         type="text"
                         className="search-bar"
