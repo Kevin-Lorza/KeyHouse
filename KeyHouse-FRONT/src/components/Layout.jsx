@@ -3,7 +3,8 @@ import React from 'react';
 import "../styles/Layout.css";
 import Header from './Header';
 import Footer from './Footer';
-// import Home from './Home';
+import Home from './Home';
+
 
 const Layout = () => {
   return (

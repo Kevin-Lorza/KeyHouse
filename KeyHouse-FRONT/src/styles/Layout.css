@@ -20,9 +20,9 @@ html, body, #root, .layout {
 }
 /* 
 /* Estilos del footer */
-/* .footer {
+ .footer {
     background-color: #f8f8f8;
     padding: 20px;
-    text-align: center;
     border-top: 1px solid #ddd;
-} */ 
+    margin-top: auto;
+} 
