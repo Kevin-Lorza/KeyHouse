@@ -1,41 +1,30 @@
-/* Barra de navegación */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #79cadf;
-  padding: 10px 20px;
-  color: white;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-}
-
 /* Logo se mantiene a la izquierda */
-.logo {
+.logo {                         
   flex: 1;
 }
 
-.logo img {
-  width: 50px; /* Ajusta el tamaño del logo según tus necesidades */
+.logo img {                                                                     
+  width: 50px; /* Ajusta el tamaño del logo según tus necesidades */                                                                                          
 }
 
 /* Contenedor de los elementos del menú */
 .navbar-items {
   display: flex;
-  align-items: center;
-  justify-content: center; /* Centra los elementos dentro de este contenedor */
+  align-items: right;
+  justify-content: right; /* Centra los elementos dentro de este contenedor */
   flex: 2;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+  
 }
 
 /* Estilos para los enlaces en la barra de navegación */
 .navbar-items a {
   color: white;
   text-decoration: none;
-  margin: 0 15px;
+  margin: 0 6px;
+  padding: 0 6px;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .navbar-items a:hover {
@@ -46,7 +35,8 @@
 .search-bar {
   padding: 8px;
   font-size: 0.9rem;
-  margin-right: 15px;
+  margin-right: 30px;
+  margin-left: 30px;
   border-radius: 5px;
 }
 
