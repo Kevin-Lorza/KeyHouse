@@ -1,13 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 import logo from "../images/keyhouse_remove_background.png"; // Ruta relativa corregida
 
 const Header = () => {
   const [search, setSearch] = useState("");
   const [casas, setCasas] = useState([]);
+  const [userName, setUserName] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // Cargar datos del usuario desde localStorage
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      try {
+        const parsedData = JSON.parse(userData);
+        setUserName(parsedData.nombre);
+      } catch (error) {
+        console.error("Error al procesar datos del usuario:", error);
+      }
+    }
+    
+    // Cargar avatar del usuario si existe
+    const storedAvatar = localStorage.getItem('userAvatar');
+    if (storedAvatar) {
+      // Validar que el avatar sea una URL de datos válida
+      if (storedAvatar.startsWith('data:image/')) {
+        setUserAvatar(storedAvatar);
+      } else {
+        console.warn("Formato de avatar no válido, omitiendo carga de imagen");
+        localStorage.removeItem('userAvatar'); // Limpiar datos inválidos
+      }
+    }
+
     fetch("http://localhost:4000/api/casas")
       .then((response) => response.json())
       .then((data) => {
@@ -15,6 +41,30 @@ const Header = () => {
         setCasas(data);
       })
       .catch((error) => console.error("Error al obtener casas:", error));
+  }, []);
+
+  // Mejorar manejo de logout con useCallback para evitar recreaciones innecesarias
+  const handleLogout = useCallback(() => {
+    // Ya no es necesario limpiar blobs ya que ahora usamos data URLs
+    
+    // Limpiar los datos de sesión al cerrar sesión
+    localStorage.removeItem('userData');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userAvatar');
+    
+    // Limpiar estados locales
+    setUserAvatar('');
+    setUserName('');
+    
+    navigate('/');
+  }, [navigate]);
+
+  // Efecto para limpiar memoria al desmontar el componente
+  useEffect(() => {
+    return () => {
+      // Limpieza al desmontar
+      console.log("Componente Header desmontado, limpiando recursos");
+    };
   }, []);
 
   return (
@@ -46,12 +96,21 @@ const Header = () => {
           <Link to="/RegistrarCasa" className="nav-item">
             Publicar vivienda 
           </Link>
-          <Link to="/perfil" className="nav-item">
-            Perfil
+          <Link to="/perfil" className="nav-item user-profile">
+            {userAvatar && userAvatar.startsWith('data:image/') ? (
+              <div className="user-avatar">
+                <img src={userAvatar} alt="Avatar" />
+              </div>
+            ) : (
+              <div className="user-avatar user-avatar-default">
+                <span>{userName ? userName.charAt(0).toUpperCase() : "P"}</span>
+              </div>
+            )}
+            <span className="user-name">{userName ? userName : "Perfil"}</span>
           </Link>
-          <Link to="/" className="nav-item logout-btn">
+          <button onClick={handleLogout} className="nav-item logout-btn">
             Cerrar Sesión
-          </Link>
+          </button>
         </nav>
       </header>
 

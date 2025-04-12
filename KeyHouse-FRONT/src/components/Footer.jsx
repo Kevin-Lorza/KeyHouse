@@ -118,9 +118,9 @@ const Footer = () => {
               <FaFacebook />
             </Link>
             <Link
-              to="https://twitter.com"
+              to="https://x.com"
               target="_blank"
-              aria-label="Twitter"
+              aria-label="X"
               className="social-icon"
             >
               <FaXTwitter />
