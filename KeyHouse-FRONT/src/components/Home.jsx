@@ -1,104 +1,109 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../styles/Home.css";
+import logo from "../images/Logo.png";
 
 const Home = () => {
+  const [search, setSearch] = useState("");
   const [casas, setCasas] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  
+  const [activeLink, setActiveLink] = useState("");
+  const location = useLocation();
+
+  // Efecto para establecer el link activo basado en la ruta actual
+  useEffect(() => {
+    setActiveLink(location.pathname);
+  }, [location]);
+
   // Cargar los datos desde el backend
   useEffect(() => {
-    setLoading(true);
     fetch("http://localhost:4000/api/casas")
       .then((response) => response.json())
       .then((data) => {
         console.log("Casas recibidas:", data);
         setCasas(data);
-        setLoading(false);
       })
-      .catch((error) => {
-        console.error("Error al obtener casas:", error);
-        setLoading(false);
-      });
+      .catch((error) => console.error("Error al obtener casas:", error));
   }, []);
 
-  // Cargar favoritos desde localStorage
-  useEffect(() => {
-    const storedFavorites = localStorage.getItem('userFavorites');
-    if (storedFavorites) {
-      try {
-        setFavorites(JSON.parse(storedFavorites));
-      } catch (error) {
-        console.error("Error al cargar favoritos:", error);
-      }
+  // Función para el efecto ripple
+  const createRipple = (event) => {
+    const button = event.currentTarget;
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+    circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+    circle.classList.add("ripple");
+
+    const ripple = button.getElementsByClassName("ripple")[0];
+    if (ripple) {
+      ripple.remove();
     }
-  }, []);
-  
-  // Escuchar cambios en el término de búsqueda desde localStorage
-  useEffect(() => {
-    // Función para actualizar el estado cuando cambia localStorage
-    const handleStorageChange = () => {
-      const currentSearchTerm = localStorage.getItem('searchTerm') || '';
-      setSearchTerm(currentSearchTerm);
-    };
-    
-    // Set initial value
-    handleStorageChange();
-    
-    // Agregar event listener para el evento 'storage'
-    window.addEventListener('storage', handleStorageChange);
-    
-    // También verificar cambios cada 300ms (caso de cambios en la misma ventana)
-    const interval = setInterval(handleStorageChange, 300);
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
-    };
-  }, []);
 
-  // Verificar si una casa está en favoritos
-  const isFavorite = (casaId) => {
-    return favorites.some(fav => fav.id === casaId);
+    button.appendChild(circle);
   };
-
-  // Función para agregar o quitar de favoritos
-  const toggleFavorite = (casa) => {
-    const newFavorites = [...favorites];
-    const index = newFavorites.findIndex(fav => fav.id === casa.id);
-    
-    if (index >= 0) {
-      // Remover de favoritos si ya existe
-      newFavorites.splice(index, 1);
-    } else {
-      // Añadir a favoritos
-      newFavorites.push(casa);
-    }
-    
-    // Actualizar estado y localStorage
-    setFavorites(newFavorites);
-    localStorage.setItem('userFavorites', JSON.stringify(newFavorites));
-  };
-  
-  // Filtrar casas según el término de búsqueda
-  const filteredCasas = casas.filter(casa => 
-    casa.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    casa.ubicacion?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   return (
     <div className="home-container">
-      {loading ? (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Cargando propiedades...</p>
+      {/* Barra de navegación mejorada */}
+      <nav className="navbar">
+        <div className="logo-container">
+          <img src={logo} alt="Logo" className="logo-img" />
         </div>
-      ) : (
+        
+        <div className="search-container">
+          <input
+            type="text"
+            className="search-bar"
+            placeholder="Buscar propiedades..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <i className="search-icon">🔍</i>
+        </div>
+        
+        <div className="navbar-items">
+          <Link 
+            to="/favoritos" 
+            className={`nav-link ${activeLink === "/favoritos" ? "active" : ""}`}
+            onClick={createRipple}
+          >
+            <span className="link-text">Favoritos</span>
+          </Link>
+          
+          <Link 
+            to="/RegistrarCasa" 
+            className={`nav-link ${activeLink === "/RegistrarCasa" ? "active" : ""}`}
+            onClick={createRipple}
+          >
+            <span className="link-text">Publicar Vivienda</span>
+          </Link>
+          
+          <Link 
+            to="/perfil" 
+            className={`nav-link ${activeLink === "/perfil" ? "active" : ""}`}
+            onClick={createRipple}
+          >
+            <span className="link-text">Perfil</span>
+          </Link>
+          
+          <Link 
+            to="/" 
+            className="nav-link logout"
+            onClick={createRipple}
+          >
+            <span className="link-text">Cerrar Sesión</span>
+          </Link>
+        </div>
+      </nav>
+
+      {/* Contenido principal */}
+      <main className="main-content">
         <div className="casas-container">
-          {filteredCasas.length > 0 ? (
-            filteredCasas.map((casa) => {
+          {casas.length > 0 ? (
+            casas.map((casa) => {
               let imagenes = [];
               try {
                 imagenes = JSON.parse(casa.imagen);
@@ -108,45 +113,31 @@ const Home = () => {
 
               return (
                 <div key={casa.id} className="casa-card">
-                  <div className="casa-card-inner">
-                    <div className="casa-image-container">
-                      {imagenes.length > 0 && (
-                        <img
-                          src={`http://localhost:4000/${imagenes[0]}`}
-                          alt={casa.titulo}
-                          className="casa-image"
-                        />
-                      )}
-                      <button 
-                        className={`favorite-button ${isFavorite(casa.id) ? 'is-favorite' : ''}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavorite(casa);
-                        }}
-                      >
-                        ♥
-                      </button>
-                    </div>
-                    <div className="casa-info">
-                      <h3 className="casa-title">{casa.titulo}</h3>
-                      <p className="casa-ubicacion">{casa.ubicacion}</p>
-                      <p className="casa-price">${casa.precio.toLocaleString()}</p>
-                      <button className="view-details-btn">Ver detalles</button>
-                    </div>
+                  {imagenes.length > 0 && (
+                    <img
+                      src={`http://localhost:4000/${imagenes[0]}`}
+                      alt={casa.titulo}
+                      className="casa-image"
+                    />
+                  )}
+                  <div className="casa-info">
+                    <h3 className="casa-title">{casa.titulo}</h3>
+                    <p className="casa-price">${casa.precio.toLocaleString()}</p>
+                    <button className="view-details-btn">Ver detalles</button>
                   </div>
                 </div>
               );
             })
           ) : (
             <div className="no-results">
-              <p>No hay propiedades disponibles con esos criterios de búsqueda.</p>
+              <p>No hay propiedades disponibles en este momento.</p>
               <Link to="/RegistrarCasa" className="add-property-link">
                 ¿Quieres publicar una propiedad?
               </Link>
             </div>
           )}
         </div>
-      )}
+      </main>
     </div>
   );
 };
