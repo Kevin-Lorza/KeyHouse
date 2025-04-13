@@ -131,19 +131,242 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden; /* Evita el doble scroll */
+  background-color: #f5f5f5;
 }
-.favorite-button {
-  background: none;
-  border: none;
+
+/* Contenedor principal de Home */
+.home-container {
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Estilos para las tarjetas de casa */
+.casas-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 60px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.casa-card {
+  width: 25%; /* Exactamente 4 por fila */
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: transparent;
+  border-radius: 0;
+  margin: 0;
+  box-shadow: none;
+}
+
+.casa-card-inner {
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.casa-card-inner:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Media queries */
+@media (max-width: 1200px) {
+  .casa-card {
+    width: 33.333%; /* 3 tarjetas por fila */
+  }
+}
+
+@media (max-width: 900px) {
+  .casa-card {
+    width: 50%; /* 2 tarjetas por fila */
+  }
+}
+
+@media (max-width: 600px) {
+  .casa-card {
+    width: 100%; /* 1 tarjeta por fila */
+  }
+}
+
+.casa-image-container {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.casa-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.casa-card:hover .casa-image {
+  transform: scale(1.05);
+}
+
+.casa-info {
+  padding: 1rem;
+  padding-bottom: 1.2rem;
+}
+
+.casa-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.casa-price {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  color: #0066cc;
+}
+
+.view-details-btn {
+  display: inline-block;
+  padding: 0.5rem 0.8rem;
+  background-color: transparent;
+  color: #0066cc;
+  border: 1px solid #0066cc;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  text-align: center;
+  width: 100%;
+}
+
+.view-details-btn:hover {
+  background-color: #0066cc;
+  color: white;
+}
+
+/* Botón de favoritos */
+.favorite-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
   font-size: 1.5rem;
-  color: #999;
+  line-height: 0.8;
+  color: #dddddd;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 }
 
-.favorite-button.active {
-  color: rgb(255, 0, 0);
+.favorite-button:hover {
+  background-color: rgba(255, 255, 255, 1);
+  color: #0066cc;
+  transform: scale(1.1);
 }
 
-.favorite-button.hover {
-  color: #ff0000;
+.favorite-button.is-favorite {
+  color: #0066cc;
+  transform: scale(1.1);
+  text-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+}
+
+/* Estado cuando no hay resultados */
+.no-results {
+  text-align: center;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.add-property-link {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 0.8rem 1.5rem;
+  background-color: #0066cc;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.add-property-link:hover {
+  background-color: #0052a3;
+}
+
+/* Animación de efecto ripple */
+.ripple {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple-animation 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .casas-container {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .casas-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Ubicación en las tarjetas */
+.casa-ubicacion {
+  color: #666;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+/* Loading spinner */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #e6f2ff;
+  border-top: 3px solid #0066cc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

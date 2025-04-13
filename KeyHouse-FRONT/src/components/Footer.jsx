@@ -30,7 +30,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/problemas-reserva" className="footer-link">
-                  Problemas con una reserva
+                  Problemas con reservas
                 </Link>
               </li>
               <li>
@@ -47,7 +47,7 @@ const Footer = () => {
             <ul>
               <li>
                 <Link to="/publicar" className="footer-link">
-                  Publicar un apartamento
+                  Buscar un coinquilino
                 </Link>
               </li>
               <li>
@@ -67,7 +67,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/coinquilino" className="footer-link">
-                  Buscar un coinquilino
+                  Publicar un apartamento
                 </Link>
               </li>
             </ul>

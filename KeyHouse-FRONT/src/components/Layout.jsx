@@ -1,10 +1,8 @@
 import React from 'react';
-// import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import "../styles/Layout.css";
 import Header from './Header';
 import Footer from './Footer';
-// import Home from './Home';
-
 
 const Layout = () => {
   return (
@@ -14,13 +12,11 @@ const Layout = () => {
 
       {/* Contenedor principal */}
       <main className="main-content">
-        {/* <Home /> */}
+        <Outlet />
       </main>
 
       {/* Footer */}
-      <footer className="footer">
-        <Footer />
-      </footer>
+      <Footer />
     </div>
   );
 };
