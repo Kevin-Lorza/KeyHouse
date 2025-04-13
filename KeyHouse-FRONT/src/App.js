@@ -7,11 +7,13 @@ import Home from "./components/Home";
 import RegistrarCasa from "./components/RegistrarCasa"; // Importar la nueva página
 import Layout from "./components/Layout";
 import Profile from "./components/Profile";
+import Favorites from "./components/Favorites";
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/favoritos" element={<Favorites />} />
         <Route path="/RegistrarCasa" element={<RegistrarCasa />} />
         <Route path="/perfil" element={<Profile />} />
         <Route path="/" element={<Login />} />
