@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate, Link } from 'react-router-dom';
 import "../styles/RegistrarCasa.css";
 
 const RegistrarCasa = () => {
@@ -13,6 +14,7 @@ const RegistrarCasa = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const usuario_id = 1; // Reemplázalo con el ID del usuario logueado
+  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
     const files = event.target.files;
@@ -153,21 +155,19 @@ const RegistrarCasa = () => {
           <div className="step-container">
             <div className="close-button">✕</div>
             <h2>Háblanos de tu alojamiento.</h2>
-            
             <div className="form-group">
               <label>Ubicación</label>
               <div className="location-input">
-                <span className="location-icon">📍</span>
-                <input 
+                <span className="location-icon position-relative"></span>
+                <input
                   type="text" 
                   value={ubicacion} 
                   onChange={(e) => setUbicacion(e.target.value)} 
-                  placeholder="Palmira" 
+                  placeholder="📍Palmira, Cra 3 # 12-34" 
                   required 
                 />
               </div>
             </div>
-            
             <button 
               className="next-button" 
               onClick={nextStep}
@@ -232,6 +232,8 @@ const RegistrarCasa = () => {
                   onChange={(e) => setPrecio(e.target.value)} 
                   placeholder="0" 
                   required 
+                  min="0" 
+                  step="1" 
                 />
               </div>
             </div>
@@ -343,6 +345,9 @@ const RegistrarCasa = () => {
     <div className="modal-overlay">
       <div className="registrar-casa-container">
         {renderStep()}
+      </div>
+      <div className="back-link">
+        <Link to="/home">{'← Volver a inicio'}</Link>
       </div>
     </div>
   );
