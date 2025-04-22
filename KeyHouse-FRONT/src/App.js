@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import RegistrarCasa from "./components/RegistrarCasa"; // Importar la nueva página
 import Layout from "./components/Layout";
 import Profile from "./components/Profile";
+import DetalleCasa from './components/DetalleCasa';
 import Favorites from "./components/Favorites";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/create-account" element={<CreateAccount />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/casa/:id" element={<DetalleCasa />} />
         <Route path="/" element={<Layout />}>
           <Route path="home" element={<Home />} />
         </Route>

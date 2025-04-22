@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import "../styles/RegistrarCasa.css";
 
 const RegistrarCasa = () => {
@@ -13,41 +13,28 @@ const RegistrarCasa = () => {
   const [previews, setPreviews] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const usuario_id = 1; // Reemplázalo con el ID del usuario logueado
-  const navigate = useNavigate();
+
 
   const handleFileChange = (event) => {
     const files = event.target.files;
     setImagen(files);
-    
-    // Crear URLs para vistas previas
+
     const newPreviews = [];
     for (let i = 0; i < files.length; i++) {
       newPreviews.push(URL.createObjectURL(files[i]));
     }
-    
-    // Liberar URLs anteriores para evitar fugas de memoria
+
     previews.forEach(url => URL.revokeObjectURL(url));
-    
+
     setPreviews(newPreviews);
   };
 
   // Función para eliminar una imagen específica
   const removeImage = (index) => {
-    // Crear una nueva FileList es complejo, por lo que trabajaremos con arrays
-    const newImageArray = Array.from(imagen);
-    newImageArray.splice(index, 1);
-    
-    // Actualizar previews
-    const newPreviews = [...previews];
-    URL.revokeObjectURL(previews[index]); // Liberar URL
-    newPreviews.splice(index, 1);
-    
-    // Convertir el array de vuelta a FileList mediante DataTransfer
-    const dataTransfer = new DataTransfer();
-    newImageArray.forEach(file => dataTransfer.items.add(file));
-    
-    setImagen(dataTransfer.files);
+    const newImageArray = Array.from(imagen).filter((_, i) => i !== index);
+    const newPreviews = previews.filter((_, i) => i !== index);
+
+    setImagen(newImageArray);
     setPreviews(newPreviews);
   };
 
@@ -60,50 +47,41 @@ const RegistrarCasa = () => {
   };
 
   const validateForm = () => {
-    // Validación básica
     if (!titulo.trim()) return "El título es obligatorio";
     if (!descripcion.trim()) return "La descripción es obligatoria";
     if (!ubicacion.trim()) return "La ubicación es obligatoria";
-    if (!precio || precio <= 0) return "Ingrese un precio válido";
+    if (isNaN(precio) || precio <= 0) return "Ingrese un precio válido";
     if (imagen.length === 0) return "Debe subir al menos una imagen";
-    
     return null;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    
-    
-    setIsLoading(true);
-    setError(null);
-    
-    const formData = new FormData();
-    formData.append("titulo", titulo);
-    formData.append("descripcion", descripcion);
-    formData.append("ubicacion", ubicacion);
-    formData.append("precio", precio);
-    formData.append("usuario_id", usuario_id); // Asegúrate de incluirlo
-
-
-    for (let i = 0; i < imagen.length; i++) {
-        formData.append("imagen", imagen[i]);
-    }
-
-    // Validar formulario antes de enviar
+  
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
       return;
     }
-
-    // Verificar que las imágenes sean válidas antes de añadirlas
+  
+    setIsLoading(true);
+    setError(null);
+  
+    const usuario_id = localStorage.getItem("usuario_id");
+  
+    const formData = new FormData();
+    formData.append("titulo", titulo);
+    formData.append("descripcion", descripcion);
+    formData.append("ubicacion", ubicacion);
+    formData.append("precio", precio);
+    formData.append("usuario_id", usuario_id);
+  
     if (imagen.length > 0) {
       for (let i = 0; i < imagen.length; i++) {
         formData.append("imagen", imagen[i]);
       }
     }
-    
+  
     try {
       console.log("Enviando datos:", {
         titulo,
@@ -111,40 +89,40 @@ const RegistrarCasa = () => {
         ubicacion,
         precio,
         usuario_id,
-        totalImagenes: imagen.length
+        totalImagenes: imagen.length,
       });
-      
+  
       const response = await axios.post("http://localhost:4000/api/casas/registrar", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      
+  
       console.log("Respuesta del servidor:", response.data);
       alert("Casa registrada exitosamente");
-      
-      // Limpiar formulario
-      setTitulo("");
-      setDescripcion("");
-      setUbicacion("");
-      setPrecio("");
-      setImagen([]);
-      setPreviews([]);
-      setCurrentStep(1);
+  
+      limpiarFormulario();
     } catch (error) {
       console.error("Error al registrar casa:", error);
-      
+  
       if (error.response) {
-        // El servidor respondió con un código de estado fuera del rango 2xx
         setError(`Error del servidor: ${error.response.data.message || error.response.statusText || 'Error desconocido'}`);
       } else if (error.request) {
-        // La petición fue hecha pero no se recibió respuesta
         setError("No se recibió respuesta del servidor. Verifique su conexión a internet.");
       } else {
-        // Error al configurar la petición
         setError(`Error: ${error.message}`);
       }
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const limpiarFormulario = () => {
+    setTitulo("");
+    setDescripcion("");
+    setUbicacion("");
+    setPrecio("");
+    setImagen([]);
+    setPreviews([]);
+    setCurrentStep(1);
   };
 
   // Renderizar el paso actual
