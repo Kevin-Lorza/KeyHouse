@@ -131,8 +131,24 @@ const Home = () => {
                       <h3 className="casa-title">{casa.titulo}</h3>
                       <p className="casa-ubicacion">{casa.ubicacion}</p>
                       <p className="casa-price">${casa.precio.toLocaleString()}</p>
-                      <button className="view-details-btn">Ver detalles</button>
-                    </div>
+                      <Link
+                        to={`/casa/${casa.id}`}
+                      >
+                        <button
+                          style={{
+                            backgroundColor: '#007bff',
+                            color: 'white',
+                            padding: '10px 20px',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '16px'
+                          }}
+                        >
+                          Ver detalles
+                        </button>
+                      </Link>
+                      </div>
                   </div>
                 </div>
               );
