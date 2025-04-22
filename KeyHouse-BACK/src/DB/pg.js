@@ -205,6 +205,20 @@ function eliminarCasa(id) {
         });
     });
 }
+// tu conexión personalizada
+
+async function insertarFavorito(usuario_id, casa_id) {
+  await client.query('INSERT INTO favoritos (usuario_id, casa_id) VALUES ($1, $2)', [usuario_id, casa_id]);
+}
+
+async function eliminarFavorito(usuario_id, casa_id) {
+  await client.query('DELETE FROM favoritos WHERE usuario_id = $1 AND casa_id = $2', [usuario_id, casa_id]);
+}
+
+async function verificarFavorito(usuario_id, casa_id) {
+  const result = await client.query('SELECT * FROM favoritos WHERE usuario_id = $1 AND casa_id = $2', [usuario_id, casa_id]);
+  return result.rows.length > 0;
+}
 
 module.exports = {
     todos,
@@ -215,6 +229,10 @@ module.exports = {
     obtenerCasas,
     obtenerCasasPorUsuario,
     insertarCasa,
-    eliminarCasa
+    eliminarCasa,
+    insertarFavorito,
+    eliminarFavorito,
+    verificarFavorito
 };
+
 

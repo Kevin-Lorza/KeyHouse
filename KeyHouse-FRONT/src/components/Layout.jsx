@@ -1,26 +1,19 @@
 import React from 'react';
-// import { Outlet } from 'react-router-dom';
 import "../styles/Layout.css";
 import Header from './Header';
 import Footer from './Footer';
-import Home from './Home';
-
+import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
   return (
     <div className="layout">
-      {/* Header */}
-      <Header />
+      <Header /> {/* Cabecera común en todas las páginas */}
 
-      {/* Contenedor principal */}
       <main className="main-content">
-        {/* <Home /> */}
+        <Outlet /> {/* Esto renderiza el contenido correspondiente a cada ruta */}
       </main>
 
-      {/* Footer */}
-      <footer className="footer">
-        <Footer />
-      </footer>
+      <Footer /> {/* Pie de página común en todas las páginas */}
     </div>
   );
 };

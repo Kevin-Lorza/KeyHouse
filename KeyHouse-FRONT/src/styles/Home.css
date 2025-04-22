@@ -129,9 +129,12 @@
 /* Ajuste de margen en el body para evitar solapamiento */
 body {
   margin: 0;
-  padding: 0;
-  overflow: hidden; /* Evita el doble scroll */
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  /* Eliminar la propiedad overflow */
+  /* overflow: hidden; */
 }
+
 .favorite-button {
   background: none;
   border: none;
@@ -147,3 +150,60 @@ body {
 .favorite-button.hover {
   color: #ff0000;
 }
+
+/* Estilo para el botón de ver detalles */
+.view-details-btn {
+  position: relative;
+  z-index: 10; /* Esto asegurará que el botón se muestre por encima de otros elementos */
+}
+
+
+.view-details-btn:hover {
+  background-color: #0056b3; /* Color al pasar el cursor */
+  transform: translateY(-2px); /* Efecto de elevación */
+}
+
+/* Estilo para cuando el botón está deshabilitado */
+.view-details-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.casa-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.casa-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.casa-price {
+  color: #007bff;
+  font-size: 1rem;
+}
+
+.casa-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+}
+
+.casas-container {
+  min-height: calc(100vh - 120px); /* Ajusta el alto para que reste la altura de header y footer */
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+

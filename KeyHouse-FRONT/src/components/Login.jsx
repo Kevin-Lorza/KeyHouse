@@ -30,6 +30,7 @@ const Login = () => {
       const userArray = data.body || [];
       const user = userArray.find(user => user.email === email && user.contraseña === password);
       if (user) {
+        localStorage.setItem('usuario_id', user.id_usuario);
         navigate('/home');
       } else {
         setError('Usuario no creado o contraseña incorrecta.');

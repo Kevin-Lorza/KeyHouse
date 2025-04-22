@@ -48,60 +48,11 @@ const Home = () => {
   return (
     <div className="home-container">
       {/* Barra de navegación mejorada */}
-      <nav className="navbar">
-        <div className="logo-container">
-          <img src={logo} alt="Logo" className="logo-img" />
-        </div>
-        
-        <div className="search-container">
-          <input
-            type="text"
-            className="search-bar"
-            placeholder="Buscar propiedades..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <i className="search-icon">🔍</i>
-        </div>
-        
-        <div className="navbar-items">
-          <Link 
-            to="/favoritos" 
-            className={`nav-link ${activeLink === "/favoritos" ? "active" : ""}`}
-            onClick={createRipple}
-          >
-            <span className="link-text">Favoritos</span>
-          </Link>
-          
-          <Link 
-            to="/RegistrarCasa" 
-            className={`nav-link ${activeLink === "/RegistrarCasa" ? "active" : ""}`}
-            onClick={createRipple}
-          >
-            <span className="link-text">Publicar Vivienda</span>
-          </Link>
-          
-          <Link 
-            to="/perfil" 
-            className={`nav-link ${activeLink === "/perfil" ? "active" : ""}`}
-            onClick={createRipple}
-          >
-            <span className="link-text">Perfil</span>
-          </Link>
-          
-          <Link 
-            to="/" 
-            className="nav-link logout"
-            onClick={createRipple}
-          >
-            <span className="link-text">Cerrar Sesión</span>
-          </Link>
-        </div>
-      </nav>
+      
 
       {/* Contenido principal */}
       <main className="main-content">
-        <div className="casas-container">
+      <div className="casas-container">
           {casas.length > 0 ? (
             casas.map((casa) => {
               let imagenes = [];
@@ -121,20 +72,18 @@ const Home = () => {
                     />
                   )}
                   <div className="casa-info">
-                    <h3 className="casa-title">{casa.titulo}</h3>
-                    <p className="casa-price">${casa.precio.toLocaleString()}</p>
-                    <button className="view-details-btn">Ver detalles</button>
+                    <h3>{casa.titulo}</h3>
+                    <p>Precio: ${casa.precio.toLocaleString()}</p>
+                    {/* Botón de redirección */}
+                    <Link to={`/casa/${casa.id}`} className="ver-detalles-btn">
+                      Ver detalles
+                    </Link>
                   </div>
                 </div>
               );
             })
           ) : (
-            <div className="no-results">
-              <p>No hay propiedades disponibles en este momento.</p>
-              <Link to="/RegistrarCasa" className="add-property-link">
-                ¿Quieres publicar una propiedad?
-              </Link>
-            </div>
+            <p className="no-results">No hay casas registradas.</p>
           )}
         </div>
       </main>
