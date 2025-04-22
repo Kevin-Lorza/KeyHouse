@@ -1,90 +1,104 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "../styles/Home.css";
 
 const Home = () => {
   const [casas, setCasas] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+  const [favoritos, setFavoritos] = useState([]);
+  const [mensaje, setMensaje] = useState('');
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // Cargar los datos desde el backend
+
+  // Obtener favoritos
+  const verificarFavoritos = async () => {
+    const usuario_id = localStorage.getItem("usuario_id");
+    if (!usuario_id) return;
+
+    try {
+      const response = await axios.get(`http://localhost:4000/api/favoritos/${usuario_id}`);
+      setFavoritos(response.data);
+    } catch (error) {
+      console.error("Error al verificar favoritos:", error);
+    }
+  };
+
+  // Obtener casas
   useEffect(() => {
-    setLoading(true);
-    fetch("http://localhost:4000/api/casas")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Casas recibidas:", data);
-        setCasas(data);
+    const fetchCasas = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get("http://localhost:4000/api/casas");
+        setCasas(response.data);
+        await verificarFavoritos();
+      } catch (error) {
+        console.error("Error al cargar casas:", error);
+        setMensaje("Error al cargar casas.");
+      } finally {
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error al obtener casas:", error);
-        setLoading(false);
-      });
+      }
+    };
+
+    fetchCasas();
   }, []);
 
-  // Cargar favoritos desde localStorage
+  // Obtener búsqueda de localStorage
   useEffect(() => {
-    const storedFavorites = localStorage.getItem('userFavorites');
-    if (storedFavorites) {
-      try {
-        setFavorites(JSON.parse(storedFavorites));
-      } catch (error) {
-        console.error("Error al cargar favoritos:", error);
-      }
-    }
-  }, []);
-  
-  // Escuchar cambios en el término de búsqueda desde localStorage
-  useEffect(() => {
-    // Función para actualizar el estado cuando cambia localStorage
     const handleStorageChange = () => {
-      const currentSearchTerm = localStorage.getItem('searchTerm') || '';
+      const currentSearchTerm = localStorage.getItem("searchTerm") || "";
       setSearchTerm(currentSearchTerm);
     };
-    
-    // Set initial value
+
     handleStorageChange();
-    
-    // Agregar event listener para el evento 'storage'
-    window.addEventListener('storage', handleStorageChange);
-    
-    // También verificar cambios cada 300ms (caso de cambios en la misma ventana)
+    window.addEventListener("storage", handleStorageChange);
     const interval = setInterval(handleStorageChange, 300);
-    
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
       clearInterval(interval);
     };
   }, []);
 
-  // Verificar si una casa está en favoritos
-  const isFavorite = (casaId) => {
-    return favorites.some(fav => fav.id === casaId);
+  const handleAgregarFavorito = async (casa_id) => {
+    const usuario_id = localStorage.getItem("usuario_id");
+    if (!usuario_id) {
+      setMensaje("Debes iniciar sesión para agregar a favoritos.");
+      return;
+    }
+
+    try {
+      await axios.post("http://localhost:4000/api/favoritos/agregar", {
+        usuario_id,
+        casa_id,
+      });
+      await verificarFavoritos();
+    } catch (error) {
+      console.error("Error al agregar a favoritos:", error);
+    }
   };
 
-  // Función para agregar o quitar de favoritos
-  const toggleFavorite = (casa) => {
-    const newFavorites = [...favorites];
-    const index = newFavorites.findIndex(fav => fav.id === casa.id);
-    
-    if (index >= 0) {
-      // Remover de favoritos si ya existe
-      newFavorites.splice(index, 1);
-    } else {
-      // Añadir a favoritos
-      newFavorites.push(casa);
+  const handleEliminarFavorito = async (casa_id) => {
+    const usuario_id = localStorage.getItem("usuario_id");
+    if (!usuario_id) {
+      setMensaje("Debes iniciar sesión.");
+      return;
     }
-    
-    // Actualizar estado y localStorage
-    setFavorites(newFavorites);
-    localStorage.setItem('userFavorites', JSON.stringify(newFavorites));
+
+    try {
+      await axios.delete("http://localhost:4000/api/favoritos/eliminar", {
+        data: { usuario_id, casa_id },
+      });
+      await verificarFavoritos();
+    } catch (error) {
+      console.error("Error al eliminar de favoritos:", error);
+    }
   };
-  
-  // Filtrar casas según el término de búsqueda
-  const filteredCasas = casas.filter(casa => 
-    casa.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+
+  const esFavorito = (casa_id) => {
+    return favoritos.some(fav => parseInt(fav.casa_id) === casa_id);
+  };
+
+  const filteredCasas = casas.filter(casa =>
+    casa.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     casa.ubicacion?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -117,38 +131,38 @@ const Home = () => {
                           className="casa-image"
                         />
                       )}
-                      <button 
-                        className={`favorite-button ${isFavorite(casa.id) ? 'is-favorite' : ''}`}
+                      <button
+                        className={`favorite-button ${esFavorito(casa.id) ? "is-favorite" : ""}`}
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleFavorite(casa);
+                          esFavorito(casa.id)
+                            ? handleEliminarFavorito(casa.id)
+                            : handleAgregarFavorito(casa.id);
                         }}
                       >
-                        ♥
+                        {esFavorito(casa.id) ? "♥" : "♡"}
                       </button>
                     </div>
                     <div className="casa-info">
                       <h3 className="casa-title">{casa.titulo}</h3>
                       <p className="casa-ubicacion">{casa.ubicacion}</p>
                       <p className="casa-price">${casa.precio.toLocaleString()}</p>
-                      <Link
-                        to={`/casa/${casa.id}`}
-                      >
+                      <Link to={`/casa/${casa.id}`}>
                         <button
                           style={{
-                            backgroundColor: '#007bff',
-                            color: 'white',
-                            padding: '10px 20px',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            fontSize: '16px'
+                            backgroundColor: "#007bff",
+                            color: "white",
+                            padding: "10px 20px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            fontSize: "16px",
                           }}
                         >
                           Ver detalles
                         </button>
                       </Link>
-                      </div>
+                    </div>
                   </div>
                 </div>
               );
@@ -163,6 +177,7 @@ const Home = () => {
           )}
         </div>
       )}
+      {mensaje && <p style={{ marginTop: "10px", fontWeight: "bold" }}>{mensaje}</p>}
     </div>
   );
 };
