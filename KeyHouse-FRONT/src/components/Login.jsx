@@ -46,6 +46,8 @@ const Login = () => {
         );
         // Guardar estado de login
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("usuario_id", user.id_usuario);
+        localStorage.setItem("id_usuario", user.id_usuario);
 
         navigate("/home");
       } else {
