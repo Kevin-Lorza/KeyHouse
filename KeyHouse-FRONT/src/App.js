@@ -10,6 +10,9 @@ import Profile from "./components/Profile";
 import Favorites from "./components/Favorites";
 import SobreNosotros from "./components/SobreNosotros";
 import DetalleCasa  from "./components/DetalleCasa";
+import MisPropiedades from './components/MisPropiedades';
+import EditarPropiedad from './components/EditarPropiedad';
+import PublicarPropiedad from './components/PublicarPropiedad';
 
 
 function App() {
@@ -27,6 +30,9 @@ function App() {
           <Route path="/casa/:id" element={<DetalleCasa />} />
           <Route path="home" element={<Home />} />
         </Route>
+        <Route path="/mis-propiedades" element={<MisPropiedades />} />
+        <Route path="/editar-propiedad/:id" element={<EditarPropiedad />} />
+        <Route path="/publicar-propiedad" element={<PublicarPropiedad />} />
       </Routes>
     </Router>
   );
