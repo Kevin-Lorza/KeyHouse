@@ -160,11 +160,11 @@ const Header = () => {
             <Link to="/mis-propiedades" className="nav-item">
               <span className="nav-icon"></span> Mis Propiedades
             </Link>
+            <Link to="/solicitudes" className="nav-item">
+              <span className="nav-icon"></span> Solicitudes
+            </Link> 
           </>
         )}
-        <Link to="/RegistrarCasa" className="nav-item">
-          Publicar vivienda 
-        </Link>
         <Link to="/perfil" className="nav-item user-profile">
           {userAvatar && userAvatar.startsWith('data:image/') ? (
             <div className="user-avatar">
